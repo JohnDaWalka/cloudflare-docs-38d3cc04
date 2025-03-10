@@ -1,5 +1,5 @@
 ---
-title: Manage your secrets
+title: Manage account secrets
 pcx_content_type: concept
 sidebar:
   order: 4
@@ -10,7 +10,9 @@ description: Learn about different operations to manage your secrets in Cloudfla
 
 import { DirectoryListing, FeatureTable } from "~/components";
 
-Secrets can be API tokens, public/private keys, authorization keys, passwords, or even code variables. The only limitation is that it needs to be a string within 1024 bytes.
+Secrets can be API tokens, public/private keys, authorization keys, passwords, or even code variables. The only limitation is that it must be a string within 1024 bytes.
+
+Once a secret is added to the secrets store, it can no longer be decrypted or accessed via API or on the Dashboard, only the service associated with it will be able to access it.
 
 ## Limits
 
