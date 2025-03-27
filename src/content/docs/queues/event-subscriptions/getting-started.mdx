@@ -11,13 +11,12 @@ head:
 
 import { Render, PackageManagers, WranglerConfig } from "~/components";
 
-Cloudflare Event Subscriptions let you build event driven workflows, by subscribing to notifications from Cloudflare products such as [Super Slurper](/r2/data-migration/super-slurper.mdx), [Workflows](/workflows/), and [Workers AI](/workers-ai/). Events are delivered to a [Queue](/queues/), so you can consume them progammatically.
+Cloudflare Event Subscriptions let you build event driven workflows, by subscribing to notifications from Cloudflare products such as [Super Slurper](/r2/data-migration/super-slurper), [Workflows](/workflows/), and [Workers AI](/workers-ai/). Events are delivered to a [Queue](/queues/), so you can consume them progammatically.
 
 In this guide, you will:
 1. Create a queue, to receive events
 2. Setup an event subscription to receive events from a newly created Workflow
 3. Setup a consumer worker to consume the event
-
 
 ## Prerequisites
 To use Event Subscriptions, you will need:
