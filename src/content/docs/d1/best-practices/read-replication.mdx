@@ -10,7 +10,7 @@ import { GlossaryTooltip, Details, GitHubCode, APIRequest, Tabs, TabItem, TypeSc
 
 D1 read replication can lower latency for read queries and scale read throughput by adding read-only database copies, called read replicas, across regions globally closer to clients.
 
-Your application can use read replicas with D1 [Sessions API](/d1/worker-api/d1-database/#withsession). A Session encapsulates all the queries from one logical session for your application. For example, a Session may correspond to all queries coming from a particular web browser session. All queries within a Session read from a database instance which is as up-to-date as your query needs it to be. Sessions API ensures [sequential consistency](/d1/best-practices/read-replication/#replica-lag-and-consistency-model) for all queries in a Session.
+Your application can use read replicas with D1 [Sessions API](/d1/worker-api/d1-database/#withsession). A session encapsulates all the queries from one logical session for your application. For example, a session may correspond to all queries coming from a particular web browser session. All queries within a session read from a database instance which is as up-to-date as your query needs it to be. Sessions API ensures [sequential consistency](/d1/best-practices/read-replication/#replica-lag-and-consistency-model) for all queries in a session.
 
 To checkout D1 read replication:
 
@@ -29,17 +29,17 @@ export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const url = new URL(request.url);
 
-		// A. Create the Session.
-		// When we create a D1 Session, we can continue where we left off from a previous
-		// Session if we have that Session's last bookmark or use a constraint.
+		// A. Create the session.
+		// When we create a D1 session, we can continue where we left off from a previous
+		// session if we have that session's last bookmark or use a constraint.
 		const bookmark = request.headers.get('x-d1-bookmark') ?? 'first-unconstrained';
 		const session = env.DB01.withSession(bookmark);
 
 		try {
-			// Use this Session for all our Workers' routes.
+			// Use this session for all our Workers' routes.
 			const response = await withTablesInitialized(session, async () => await handleRequest(request, session));
 
-			// B. Return the bookmark so we can continue the Session in another request.
+			// B. Return the bookmark so we can continue the session in another request.
 			response.headers.set('x-d1-bookmark', session.getBookmark() ?? "");
 
 			return response;
@@ -66,21 +66,21 @@ async function handleRequest(request: Request, session: D1DatabaseSession) {
 	const tsStart = Date.now();
 
 	if (request.method === "GET" && pathname === '/api/orders') {
-		// C. Session read query.
+		// C. session read query.
 		const resp = await session.prepare('SELECT * FROM Orders').all();
 		return Response.json(buildResponse(session, resp, tsStart));
 
 	} else if (request.method === "POST" && pathname === '/api/orders') {
 		const order = await request.json<Order>();
 
-		// D. Session write query.
+		// D. session write query.
 		// Since this is a write query, D1 will transparently forward the query.
 		await session
 			.prepare('INSERT INTO Orders VALUES (?, ?, ?)')
 			.bind(order.customerId, order.orderId, order.quantity)
 			.run();
 
-		// E. Session read-after-write query.
+		// E. session read-after-write query.
 		// In order for the application to be correct, this SELECT
 		// statement must see the results of the INSERT statement above.
 		const resp = await session
@@ -183,20 +183,20 @@ A system with multiple read replicas located around the world improves the perfo
 
 ## Use Sessions API
 
-By using [Sessions API](/d1/worker-api/d1-database/#withsession) for read replication, all of your queries from a single <GlossaryTooltip term="session">Session</GlossaryTooltip> read from a version of the database which ensures sequential consistency. This ensures that the version of the database you are reading is logically consistent even if the queries are handled by different read replicas.
+By using [Sessions API](/d1/worker-api/d1-database/#withsession) for read replication, all of your queries from a single <GlossaryTooltip term="session">session</GlossaryTooltip> read from a version of the database which ensures sequential consistency. This ensures that the version of the database you are reading is logically consistent even if the queries are handled by different read replicas.
 
-D1 read replication achieves this by attaching a <GlossaryTooltip term="bookmark">bookmark</GlossaryTooltip> to each query within a Session. For more information, refer to [Bookmarks](/d1/reference/time-travel/#bookmarks).
+D1 read replication achieves this by attaching a <GlossaryTooltip term="bookmark">bookmark</GlossaryTooltip> to each query within a session. For more information, refer to [Bookmarks](/d1/reference/time-travel/#bookmarks).
 
-### Enable read replicaton
+### Enable read replication
 
 Read replication can be enabled at the database level in the Cloudflare dashboard. Check **\<D1 Database\>** > **Settings** to view if read replication is enabled.
 
 1. Go to [**Workers & Pages** > **D1**](https://dash.cloudflare.com/?to=/:account/workers/d1).
-2. Select an existing database > Settings > Enable Read Replication.
+2. Select an existing database > **Settings** > **Enable Read Replication**.
 
-### Start a Session without constraints
+### Start a session without constraints
 
-To create a Session from any available database version, use `withSession()` without any parameters, which will route the first query to any database instance, either the primary database instance or a read replica.
+To create a session from any available database version, use `withSession()` without any parameters, which will route the first query to any database instance, either the primary database instance or a read replica.
 
 ```ts
 const session = env.DB.withSession() // synchronous
@@ -207,16 +207,16 @@ const result = await session
 ```
 
 - `withSession()` is the same as `withSession("first-unconstrained")`
-- This approach is best when your application does not require the latest database version. All queries in a Session ensure sequential consistency.
+- This approach is best when your application does not require the latest database version. All queries in a session ensure sequential consistency.
 - Refer to the [D1 Workers Binding API documentation](/d1/worker-api/d1-database#withsession).
 
-{/* #### Example of a D1 Session without constraints
+{/* #### Example of a D1 session without constraints
 
 Suppose you want to develop a feature for displaying “likes” on a social network application.
 
-The number of likes is a good example of a situation which does not require the latest information all the time. When displaying the number of likes of a post, the first request starts a new D1 Session using the constraint `first-unconstrained`, which will be served by the nearest D1 read replica.
+The number of likes is a good example of a situation which does not require the latest information all the time. When displaying the number of likes of a post, the first request starts a new D1 session using the constraint `first-unconstrained`, which will be served by the nearest D1 read replica.
 
-Subsequent interactions on the application should continue using the same Session by passing the `bookmark` from the first query to subsequent requests. This guarantees that all interactions will observe information at least as up-to-date as the initial request, and therefore never show information older than what a user has already observed. The number of likes will be updated with newer counts over time with subsequent requests as D1 asynchronously updates the read replicas with the changes from the primary database.
+Subsequent interactions on the application should continue using the same session by passing the `bookmark` from the first query to subsequent requests. This guarantees that all interactions will observe information at least as up-to-date as the initial request, and therefore never show information older than what a user has already observed. The number of likes will be updated with newer counts over time with subsequent requests as D1 asynchronously updates the read replicas with the changes from the primary database.
 
 ```js
 async function getLikes(postId: string, db: D1Database, bookmark: string | null): GetLikesResult {
@@ -231,9 +231,9 @@ async function getLikes(postId: string, db: D1Database, bookmark: string | null)
 }
 ``` */}
 
-### Start a Session with all latest data
+### Start a session with all latest data
 
-To create a Session from the latest database version, use `withSession("first-primary")`, which will route the first query to the primary database instance.
+To create a session from the latest database version, use `withSession("first-primary")`, which will route the first query to the primary database instance.
 
 ```ts
 const session = env.DB.withSession(`first-primary`) // synchronous
@@ -243,16 +243,16 @@ const result = await session
 	.run()
 ```
 
-- This approach is best when your application requires the latest database version. All queries in a Session ensure sequential consistency.
+- This approach is best when your application requires the latest database version. All queries in a session ensure sequential consistency.
 - Refer to the [D1 Workers Binding API documentation](/d1/worker-api/d1-database#withsession).
 
 {/* #### Example of using `first-primary`
 
 Suppose you want to develop a webpage for an electricity provider which lists the electricity bill statements. An assumption here is that each statement is immutable. Once issued, it never changes.
 
-In this scenario, you want the first request of the page to show a list of all the statements and their issue dates. Therefore, the first request starts a new D1 Session using the constraint `first-primary` to get the latest information (ensuring that the list includes all issued bill statements) from the primary database instance.
+In this scenario, you want the first request of the page to show a list of all the statements and their issue dates. Therefore, the first request starts a new D1 session using the constraint `first-primary` to get the latest information (ensuring that the list includes all issued bill statements) from the primary database instance.
 
-Then, when opening an individual electricity bill statement, we can continue using the same Session by passing the `bookmark` from the first query to subsequent requests. Since each bill statement is immutable, any bill statement listed from the first query is guaranteed to be available in subsequent requests using the same Session.
+Then, when opening an individual electricity bill statement, we can continue using the same session by passing the `bookmark` from the first query to subsequent requests. Since each bill statement is immutable, any bill statement listed from the first query is guaranteed to be available in subsequent requests using the same session.
 
 ```ts
 async function listBillStatements(accountId: string, db: D1Database): Promise<ListBillStatementsResult> {
@@ -275,23 +275,23 @@ async function getBillStatement(accountId: string, billId: string, bookmark: str
 }
 ``` */}
 
-### Start a Session from previous context (bookmark)
+### Start a session from previous context (bookmark)
 
-To create a new Session from the context of a previous Session, pass a `bookmark` parameter to guarantee that the Session starts with a database version that is at least as up-to-date as the provided `bookmark`.
+To create a new session from the context of a previous session, pass a `bookmark` parameter to guarantee that the session starts with a database version that is at least as up-to-date as the provided `bookmark`.
 
 ```ts
-// retrieve bookmark from previous Session stored in HTTP header
+// retrieve bookmark from previous session stored in HTTP header
 const bookmark = request.headers.get('x-d1-bookmark') ?? 'first-unconstrained';
 
 const session = env.DB.withSession(bookmark)
 const result = await session
 	.prepare(`SELECT * FROM Customers WHERE CompanyName = 'Bs Beverages'`)
 	.run()
-// store bookmark for a future Session
+// store bookmark for a future session
 response.headers.set('x-d1-bookmark', session.getBookmark() ?? "")
 ```
 
-- Starting a Session with a `bookmark` ensures the new Session will be at least as up-to-date as the previous Session that generated the given `bookmark`.
+- Starting a session with a `bookmark` ensures the new session will be at least as up-to-date as the previous session that generated the given `bookmark`.
 - Refer to the [D1 Workers Binding API documentation](/d1/worker-api/d1-database#withsession).
 
 {/* #### Example of using `bookmark`
@@ -443,7 +443,7 @@ With the REST API, set `read_replication.mode: disabled` to disable read replica
 For this REST endpoint, you need to have an API token with `D1:Edit` permission. If you do not have an API token, follow the guide: [Create API token](/fundamentals/api/get-started/create-token/).
 
 :::note
-Disabling read replication takes up to 24 hours for replicas to stop processing requests. Sessions API works with databases that do not have read replication enabled, so it’s safe to run code with Sessions API even after you disable replicas.
+Disabling read replication takes up to 24 hours until replicas to stop processing requests. Sessions API works with databases that do not have read replication enabled, so it is safe to run code with Sessions API even after disabling read replication.
 :::
 
 <Tabs>
@@ -583,7 +583,7 @@ Sequential consistency has properties such as:
 
 You may wish to refer to the following resources:
 
-- Blog: [Beta announcement & technical deep dive](https://blog.cloudflare.com/d1-read-replication-beta/)
+- Blog: [Sequential consistency without borders: How D1 implements global read replication](https://blog.cloudflare.com/d1-read-replication-beta/)
 - Blog: [Building D1: a Global Database](https://blog.cloudflare.com/building-d1-a-global-database/)
 - [D1 Sessions API documentation](/d1/worker-api/d1-database#withsession)
 - [D1 Sessions API starter demo](https://github.com/cloudflare/templates/tree/staging/d1-starter-sessions-api)
