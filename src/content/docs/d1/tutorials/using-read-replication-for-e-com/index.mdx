@@ -569,55 +569,65 @@ To make the application more resilient, you can add retry logic to the API route
 
 ```ts
 export interface RetryConfig {
-	maxRetries?: number;
-	initialDelay?: number;
-	maxDelay?: number;
-	backoffFactor?: number;
+  maxRetries?: number;
+  initialDelay?: number;
+  maxDelay?: number;
+  backoffFactor?: number;
 }
 
+const shouldRetry = (error: unknown): boolean => {
+  const errMsg = error instanceof Error ? error.message : String(error);
+  return (
+    errMsg.includes("Network connection lost") ||
+    errMsg.includes("storage caused object to be reset") ||
+    errMsg.includes("reset because its code was updated")
+  );
+};
+
 export const defaultRetryConfig: RetryConfig = {
-	maxRetries: 3,
-	initialDelay: 100,
-	maxDelay: 1000,
-	backoffFactor: 2,
+  maxRetries: 3,
+  initialDelay: 100,
+  maxDelay: 1000,
+  backoffFactor: 2,
 };
 
 export async function withRetry<T>(
-	operation: () => Promise<T>,
-	config: RetryConfig = defaultRetryConfig,
+  operation: () => Promise<T>,
+  config: RetryConfig = defaultRetryConfig
 ): Promise<T> {
-	const maxRetries = config.maxRetries ?? defaultRetryConfig.maxRetries!;
-	const initialDelay = config.initialDelay ?? defaultRetryConfig.initialDelay!;
-	const maxDelay = config.maxDelay ?? defaultRetryConfig.maxDelay!;
-	const backoffFactor =
-		config.backoffFactor ?? defaultRetryConfig.backoffFactor!;
+  const maxRetries = config.maxRetries ?? defaultRetryConfig.maxRetries!;
+  const initialDelay = config.initialDelay ?? defaultRetryConfig.initialDelay!;
+  const maxDelay = config.maxDelay ?? defaultRetryConfig.maxDelay!;
+  const backoffFactor =
+    config.backoffFactor ?? defaultRetryConfig.backoffFactor!;
 
-	let lastError: Error | unknown;
-	let delay = initialDelay;
+  let lastError: Error | unknown;
+  let delay = initialDelay;
 
-	for (let attempt = 0; attempt <= maxRetries; attempt++) {
-		try {
-			return await operation();
-		} catch (error) {
-			lastError = error;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await operation();
+      return result;
+    } catch (error) {
+      lastError = error;
 
-			if (attempt === maxRetries) {
-				break;
-			}
+      if (!shouldRetry(error) || attempt === maxRetries) {
+        throw error;
+      }
 
-			// Wait for the calculated delay
-			await new Promise((resolve) => setTimeout(resolve, delay));
+      // Wait for the calculated delay
+      await new Promise((resolve) => setTimeout(resolve, delay));
 
-			// Calculate next delay with exponential backoff
-			delay = Math.min(delay * backoffFactor, maxDelay);
-		}
-	}
+      // Calculate next delay with exponential backoff
+      delay = Math.min(delay * backoffFactor, maxDelay);
+    }
+  }
 
-	throw lastError;
+  throw lastError;
 }
 ```
 
-The `withRetry` function is a utility function that retries a given operation with exponential backoff. It takes a configuration object as an argument, which allows you to customize the number of retries, initial delay, maximum delay, and backoff factor.
+The `withRetry` function is a utility function that retries a given operation with exponential backoff. It takes a configuration object as an argument, which allows you to customize the number of retries, initial delay, maximum delay, and backoff factor. It will only retry the operation if the error is due to a network connection loss, storage reset, or code update.
 
 Next, update the `src/index.ts` file to import the `withRetry` function and use it in the API routes.
 
