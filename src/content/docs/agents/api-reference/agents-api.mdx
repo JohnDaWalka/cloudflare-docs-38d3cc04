@@ -14,6 +14,13 @@ The Agents SDK exposes two main APIs:
 * The server-side `Agent` class. An Agent encapsulates all of the logic for an Agent, including how clients can connect to it, how it stores state, the methods it exposes, how to call AI models, and any error handling.
 * The client-side `AgentClient` class, which allows you to connect to an Agent instance from a client-side application. The client APIs also include React hooks, including `useAgent` and `useAgentChat`, and allow you to automatically synchronize state between each unique Agent (running server-side) and your client applications.
 
+:::note
+
+Agents require [Cloudflare Durable Objects](/durable-objects/), see [Configuration](/agents/getting-started/testing-your-agent/#add-the-agent-configuration) to learn how to add the required bindings to your project. 
+
+:::
+
+
 You can also find more specific usage examples for each API in the [Agents API Reference](/agents/api-reference/).
 
 <TypeScriptExample>
@@ -608,34 +615,34 @@ class AgentClient extends PartySocket {
 import { AgentClient } from "agents/client";
 
 // Connect to an Agent instance
-const socket = new AgentClient({
+const client = new AgentClient({
   agent: "chat-agent", // Name of your Agent class in kebab-case
   name: "support-room-123", // Specific instance name
-
-  // Optional event handlers
-  onOpen: () => {
-    console.log("Connected to agent");
-    // Send an initial message
-    socket.send(JSON.stringify({ type: "join", user: "user123" }));
-  },
-
-  onMessage: (event) => {
-    // Handle incoming messages
-    const data = JSON.parse(event.data);
-    console.log("Received:", data);
-
-    if (data.type === "state_update") {
-      // Update local UI with new state
-      updateUI(data.state);
-    }
-  },
-
-  onClose: () => console.log("Disconnected from agent")
+  host: window.location.host, // Using same host
 });
+
+client.onopen = () => {
+  console.log("Connected to agent");
+  // Send an initial message
+  client.send(JSON.stringify({ type: "join", user: "user123" }));
+};
+
+client.onmessage = (event) => {
+	// Handle incoming messages
+	const data = JSON.parse(event.data);
+	console.log("Received:", data);
+
+	if (data.type === "state_update") {
+		// Update local UI with new state
+		updateUI(data.state);
+	}
+};
+
+client.onclose = () => console.log("Disconnected from agent");
 
 // Send messages to the Agent
 function sendMessage(text) {
-  socket.send(JSON.stringify({
+  client.send(JSON.stringify({
     type: "message",
     text,
     timestamp: Date.now()
