@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Render, PackageManagers, Tabs, TabItem } from "~/components";
+import { Render, PackageManagers, Tabs, TabItem, TypeScriptExample } from "~/components";
 
 Hyperdrive accelerates access to your existing databases from Cloudflare Workers, making even single-region databases feel globally distributed.
 
@@ -43,7 +43,7 @@ If you want to skip the steps and get started quickly, click on the button below
 
 **MySQL deployment**
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/docs-examples/tree/hyperdrive-get-started/hyperdrive/hyperdrive-get-started-mysql)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/mysql-hyperdrive-template)
 
 </TabItem>
 </Tabs>
@@ -241,7 +241,8 @@ The `index.ts` file is where you configure your Worker's interactions with Hyper
 
 Populate your `index.ts` file with the following code:
 
-```typescript
+<TypeScriptExample>
+```ts
 // Postgres.js 3.4.5 or later is recommended
 import postgres from "postgres";
 
@@ -284,6 +285,7 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 ```
+</TypeScriptExample>
 
 Upon receiving a request, the code above does the following:
 
@@ -301,7 +303,8 @@ The `index.ts` file is where you configure your Worker's interactions with Hyper
 
 Populate your `index.ts` file with the following code:
 
-```typescript
+<TypeScriptExample>
+```ts
 // mysql2 v3.13.0 or later is required
 import { createConnection  } from 'mysql2/promise';
 
@@ -321,7 +324,7 @@ export default {
 			user: env.HYPERDRIVE.user,
 			password: env.HYPERDRIVE.password,
 			database: env.HYPERDRIVE.database,
-			port: env.HYPERDRIVE.port
+			port: env.HYPERDRIVE.port,
 
 			// The following line is needed for mysql2 compatibility with Workers
 			// mysql2 uses eval() to optimize result parsing for rows with > 100 columns
@@ -358,6 +361,7 @@ export default {
 } satisfies ExportedHandler<Env>;
 
 ```
+</TypeScriptExample>
 
 Upon receiving a request, the code above does the following:
 
