@@ -1,0 +1,37 @@
+---
+title: Get started
+pcx_content_type: get-started
+sidebar:
+  order: 2
+---
+
+import { GlossaryTooltip } from "~/components";
+
+Work with your account team to understand everything you need to ensure a smooth transition during the onboarding process.
+
+Cloudflare requires a service-specific configuration for your prefixes, as well as some requirements common to all BYOIP customers regardless of service type.
+
+## Requirements
+
+The following requirements are common to all products compatible with BYOIP.
+
+You must verify that your [Internet Routing Registry (IRR)](/byoip/concepts/irr-entries/) records are up to date and contain:
+
+    - `route` or `route6` objects matching the exact prefixes you want to onboard
+    - `origin` matching the correct ASN you want to onboard
+
+:::caution[RPKI validation]
+You are not required to use <GlossaryTooltip term="Resource Public Key Infrastructure (RPKI)">Resource Public Key Infrastructure (RPKI)</GlossaryTooltip>. However, if you do, make sure your <GlossaryTooltip term="Route Origin Authorization (ROA)">ROAs</GlossaryTooltip> are accurate. You can use [Cloudflare's RPKI Portal](https://rpki.cloudflare.com/?view=validator) and a second source such as [Routinator](https://rpki-validator.ripe.net/ui/) to double check your prefixes.
+:::
+
+## Process overview
+
+Overall, the steps can be summarized as follows:
+
+1. You revise your IRRs and ROAs (if applicable) to make sure they are correct.
+2. You prepare a [letter of agency (LOA)](/byoip/concepts/loa/) containing both the prefixes you are authorizing Cloudflare to announce and which ASN they will be announced under. Cloudflare will present this to our transit partners as evidence that we are allowed to announce the route.
+3. After receiving the LOA, Cloudflare validates the [requirements](#requirements).
+4. Cloudflare provisions the IPs.
+5. Once the IPs are provisioned, you use [service bindings](/byoip/service-bindings/) and [address maps](/byoip/address-maps/) to control how your IPs are used.
+6. (Optional) You can use [Prefix delegations](/byoip/concepts/prefix-delegations/) to share all or part of your prefix with another Cloudflare account.
+7. Finally, you configure the [Border Gateway Protocol advertisement](/byoip/concepts/dynamic-advertisement/) for your IPs at the Cloudflare network.
