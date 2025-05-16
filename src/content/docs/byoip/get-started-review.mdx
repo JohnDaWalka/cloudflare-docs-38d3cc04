@@ -33,5 +33,8 @@ Overall, the steps can be summarized as follows:
 3. You use the [Upload LOA Document](/api/resources/addressing/subresources/loa_documents/methods/create/) API endpoint to submit the letter under your account and the [Add Prefix](/api/resources/addressing/subresources/prefixes/methods/create/) endpoint to create the prefix in your account with the associated `loa_document_id`.
 4. After receiving the LOA, Cloudflare validates the [requirements](#requirements) and provisions the IPs.
 5. (Optional) You can use [Prefix delegations](/byoip/concepts/prefix-delegations/) to share all or part of your prefix with another Cloudflare account.
-6. You use [service bindings](/byoip/service-bindings/) and [address maps](/byoip/address-maps/) to control how your IPs are used.
+6. You use [service bindings](/byoip/service-bindings/)[^1] and [address maps](/byoip/address-maps/)[^2] to control how your IPs are used.
 7. Finally, you configure the [Border Gateway Protocol advertisement](/byoip/concepts/dynamic-advertisement/) for your IPs at the Cloudflare network.
+
+[^1]: Mappings that control through which pipeline traffic destined for a given IP address will be routed.
+[^2]: Mappings that specify which IP addresses should be used when Cloudflare responds to DNS queries for proxied hostnames.
