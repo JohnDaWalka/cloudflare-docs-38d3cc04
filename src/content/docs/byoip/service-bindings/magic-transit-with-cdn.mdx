@@ -8,11 +8,9 @@ sidebar:
 
 import { Details, Example, TabItem, Tabs, GlossaryTooltip, APIRequest } from "~/components";
 
-[Magic Transit](/magic-transit/) customers using BYOIP can also benefit from the performance, reliability, and security that Cloudflare offers for HTTP-based applications.
+[Magic Transit](/magic-transit/) customers using BYOIP can also benefit from the performance, reliability, and security that Cloudflare offers for HTTP-based applications. [Service bindings](/byoip/service-bindings/) allow BYOIP customers to selectively route traffic on a per-IP address basis to the CDN pipeline (which includes [Cache](/cache/), [Web Application Firewall (WAF)](/waf/), and more).
 
-This documentation covers using the Cloudflare API to configure [service bindings](/byoip/service-bindings/) within Cloudflare's IP Address Management framework. Service bindings allow BYOIP customers to selectively route traffic on a per-IP address basis to the CDN pipeline (which includes [Cache](/cache/), [Web Application Firewall (WAF)](/waf/), and more).
-
-It is also possible to define service bindings to route traffic to the Spectrum pipeline selectively. However, this is not in the scope of this guide.
+This guide covers using the Cloudflare API to configure Magic Transit with CDN. It is also possible to define service bindings to route traffic to the Spectrum pipeline selectively. Refer to [scope](/byoip/service-bindings/#scope) for the full list of possible configurations and other available guides.
 
 It is important to note that traffic routed to the CDN pipeline is protected at Layers 3 and 4 by the inherent DDoS protection capabilities native to the CDN pipeline.
 
@@ -62,7 +60,7 @@ At this point, continuing the [example](#before-you-begin), you should have a ma
 
 </Example>
 
-4. To confirm you currently only have a Magic Transit service binding and that it spans across your entire prefix, make a `GET` request to the [List Service Bindings](/api/resources/addressing/subresources/prefixes/subresources/service_bindings/methods/list/) endpoint. Replace the `{prefix_id}` in the URI path by the actual prefix ID you got from the previous step.
+4. To confirm you currently have a Magic Transit service binding and that it spans across your entire prefix, make a `GET` request to the [List Service Bindings](/api/resources/addressing/subresources/prefixes/subresources/service_bindings/methods/list/) endpoint. Replace the `{prefix_id}` in the URI path by the actual prefix ID you got from the previous step.
 
 <Example>
 
