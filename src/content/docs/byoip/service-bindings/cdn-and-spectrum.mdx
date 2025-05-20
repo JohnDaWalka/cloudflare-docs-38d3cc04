@@ -14,10 +14,17 @@ import { Render } from  "~/components";
 
 - You can upgrade individual IPs within a Spectrum prefix to a CDN IP. For example, if you have a Spectrum prefix 203.0.113.0/24, you can upgrade 203.0.113.1 to CDN.
 
+This guide will use the first example, considering a prefix that was onboarded to the CDN and will have a few IPs upgraded to Spectrum.
 
 ## Before you begin
 
-<Render file="service-bindings-prereqs" />
+<Render
+file="service-bindings-prereqs"
+params={{
+	pre_existing_product: "CDN",
+	added_product: "Spectrum"
+}}
+/>
 
 ---
 
@@ -25,11 +32,23 @@ import { Render } from  "~/components";
 
 ### 1. Get account information
 
-<Render file="service-bindings-account-info" />
+<Render
+file="service-bindings-account-info"
+params={{
+	pre_existing_product: "CDN",
+	added_product: "Spectrum"
+}}
+/>
 
 ### 2. Create service bindings
 
-<Render file="service-bindings-create-binding" />
+<Render
+file="service-bindings-create-binding"
+params={{
+	pre_existing_product: "CDN",
+	added_product: "Spectrum"
+}}
+/>
 
 ### 3. Verify all service bindings
 
