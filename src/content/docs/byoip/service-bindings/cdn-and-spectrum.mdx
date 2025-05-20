@@ -6,6 +6,8 @@ sidebar:
   label: CDN and Spectrum
 ---
 
+import { Render } from  "~/components";
+
  With [service bindings](/byoip/service-bindings/), CDN[^1] customers using BYOIP can use the same prefix they have onboarded to selectively route traffic on a per-IP address basis to [Spectrum](/spectrum/)[^2], and vice-versa. This means:
 
 - You can upgrade individual IPs within a CDN prefix to a Spectrum IP. For example, if you have a CDN prefix 203.0.113.0/24, you can upgrade 203.0.113.1 to Spectrum.
@@ -15,7 +17,7 @@ sidebar:
 
 ## Before you begin
 
-(partial adjusting the example with conditional)
+<Render file="service-bindings-prereqs" />
 
 ---
 
@@ -23,11 +25,11 @@ sidebar:
 
 ### 1. Get account information
 
-(partial with conditionals)
+<Render file="service-bindings-account-info" />
 
 ### 2. Create service bindings
 
-(partial with conditionals)
+<Render file="service-bindings-create-binding" />
 
 ### 3. Verify all service bindings
 
@@ -47,7 +49,7 @@ Configure via API
 
 ## (Optional) Add layer 7 functionality
 
-(partial)
+<Render file="service-bindings-related-products" />
 
 [^1]: Layer 7 HTTP-based
 [^2]: Layer 4 or Layer 7 HTTP with custom ports
