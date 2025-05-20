@@ -4,7 +4,7 @@ params:
  - added_product
 ---
 
-import { Example } from "~/components";
+import { Example, APIRequest } from "~/components";
 
 :::caution[Caution]
 Once a service binding is created (or deleted), it will take four to six hours to propagate across Cloudflare's global network. Services for the IP addresses in scope will likely be disrupted during this window.
@@ -18,16 +18,17 @@ Continuing the example, `203.0.113.100/32` designates an IP address that is with
 
 Replace the `{prefix_id}` in the URI with your prefix ID from previous steps. Within the request body, the `cidr` value should correspond to the IP address or subnet that you are configuring for use with {props.added_product}.
 
-```bash
-
-curl https://api.cloudflare.com/client/v4/accounts/{account_id}/addressing/prefixes/{prefix_id}/bindings \
---header "Authorization: Bearer <API_TOKEN>" \
---header "Content-Type: application/json" \
---data '{
-  "cidr": "203.0.113.100/32",
-  "service_id": "<SERVICE_ID>"
-}'
-```
+<APIRequest
+	path="/accounts/{account_id}/addressing/prefixes/{prefix_id}/bindings"
+	method="POST"
+	json={{
+		  "cidr": "203.0.113.100/32",
+			"service_id": "<SERVICE_ID>"
+	}}
+  code={{
+    mark: [6, 7]
+  }}
+/>
 
 In the response body, the initial provisioning state should be `provisioning`.
 
@@ -43,7 +44,7 @@ In the response body, the initial provisioning state should be `provisioning`.
       "state": "provisioning"
       },
     "service_id": "<SERVICE_ID>",
-    "service_name": "CDN"
+    "service_name": "<SERVICE_NAME>"
   }
 }
 ```
