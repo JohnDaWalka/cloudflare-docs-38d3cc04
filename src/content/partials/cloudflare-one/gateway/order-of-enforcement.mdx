@@ -10,59 +10,55 @@ flowchart TB
     accTitle: Gateway order of enforcement
     accDescr: Flowchart describing the order of enforcement for Gateway policies.
 
-    %% In with user traffic
-    start(["Traffic"])-->dns0[/"DNS query"/]-->dns1
-    start-->http0{{"HTTP(S) request on port 80 or 443?"}}
-    http0-- "Yes" -->http1
-    http0-- "No" -->network0
-
-    %% DNS policies
-    subgraph DNS
-    dns1["DNS policies"]
-    style DNS text-align:left
-    dns1-- "Resolved by" -->dns2["1.1.1.1"]
-    dns1-.->dns3
-
-        %% DNS resolution
-        subgraph Resolution
+ subgraph Resolution["Resolution"]
         dns2["1.1.1.1"]
-        dns3["Resolver policies <br />(Enterprise users only)"]-- "Resolved by" -->dns4["Custom resolver"]
-        end
+        dns4["Custom resolver"]
+        dns3["Resolver policies <br>(Enterprise users only)"]
+  end
+ subgraph DNS["DNS"]
+        dns1["DNS policies"]
+        Resolution
+  end
+ subgraph HTTP["HTTP"]
+        http1{{"Do Not Inspect policies"}}
+        http2["Isolate policies  <br>(with add-on)"]
+        http3["Allow, Block, Do Not Scan, Quarantine, Redirect policies"]
+        https["HTTP (port 80) or<br>HTTPS (port 443)?"]
+  end
+ subgraph Network["Network"]
+        network1["Network policies"]
+  end
+ subgraph Proxy["Proxy"]
+        HTTP
+        Network
+        Egress["Egress"]
+  end
+ subgraph Egress["Egress"]
+        egress1["Egress policies <br>(Enterprise users only)"]
+  end
+    start(["Traffic"]) --> dns0[/"DNS query"/] & http0["Network connections"]
+    dns0 --> dns1
+    dns1 -- Resolved by --> dns2
+    dns1 -.-> dns3
+    dns3 -- Resolved by --> dns4
+    dns2 -----> internet(["Internet"])
+    dns4 -----> internet
+    dns4 -.-> cloudflare["Private network services <br>(Cloudflare Tunnel, Magic WAN, etc.)"]
+    http1 -. Inspect .-> http2
+    http2 --> http3
+    network1 -.-> egress1
+    http0 --> n1["Magic Firewall"]
+    n1 --> n2["Check for origin availability (TCP SYN)"]
+    n2 --> network1
+    http3 --> internet
+    http1 -- Do Not Inspect --> internet
+    egress1 --> https
+    https -- HTTPS --> http1
+    https -. HTTP .-> http2
 
-    end
-    dns2["1.1.1.1"]----->internet
-    dns4----->internet
-    dns4-.->cloudflare["Private network services <br />(Cloudflare Tunnel, Magic WAN, etc.)"]
-
-
-    %% Proxied by Gateway
-    subgraph Proxy
-
-    %% HTTP policies
-    subgraph HTTP
-    http1{{"Do Not Inspect policies"}}
-    http1-."Inspect".->http2["Isolate policies  <br />(with add-on)"]
-    http2-->http3["Allow, Block, Do Not Scan policies"]
-    end
-
-    http1-- "Do Not Inspect" -->network0
-    http3-->network0
-    network0[/"Network connections"/]-->network1
-
-    %% Network policies
-    subgraph Network
-    network1["Network policies"]
-    end
-    end
-
-    %% Egress
-    subgraph Egress
-    network1-.->egress1["Egress policies <br />(Enterprise users only)"]
-    end
-
-    %% Finish
-    network1-- "Egress with Cloudflare IP" -->internet([Internet])
-    egress1-- "Egress with dedicated IP" -->internet
+    https@{ shape: hex}
+    http0@{ shape: lean-r}
+    style DNS text-align:left
 ```
 
 ## Priority between policy builders
