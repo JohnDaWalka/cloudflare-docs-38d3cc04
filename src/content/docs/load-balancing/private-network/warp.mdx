@@ -1,17 +1,17 @@
 ---
 
 pcx_content_type: how-to
-title: Set up Private Network Load Balancing with Cloudflare Tunnel and VLAN
+title: Set up Private Network Load Balancing with WARP
 sidebar:
   order: 4
 
 ---
 
-To use Private Network Load Balancing, you must first set up a Cloudflare Tunnel and a Virtual Local Area Network (VLAN) in the [Cloudflare Zero Trust Dashboard](http://one.dash.cloudflare.com). This guide walks you through all required steps, from setup to optional configurations.
+To use Private Network Load Balancing, you must first set up a Cloudflare Tunnel and a Virtual Local Area Network in the [Cloudflare Zero Trust Dashboard](http://one.dash.cloudflare.com). This guide walks you through all required steps, from setup to optional configurations.
 
-## 1. Create Tunnel and VLAN
+## 1. Create Tunnel and Virtual Network
 
-Skip to [step 2](/load-balancing/private-network/warp/#2-create-load-balancer-pools) if you already have a Cloudflare Tunnel and VLAN created.
+Skip to [step 2](/load-balancing/private-network/warp/#2-create-load-balancer-pools) if you already have a Cloudflare Tunnel and Virtual Network created.
 
 ### 1.1 Create a Cloudflare Tunnel
 
@@ -26,7 +26,7 @@ Skip to [step 2](/load-balancing/private-network/warp/#2-create-load-balancer-po
 
 For more details, refer to the [Create tunnel](/cloudflare-one/connections/connect-networks/get-started/create-remote-tunnel/) documentation.
 
-### 1.2 Create a Virtual Network (VLAN)
+### 1.2 Create a Virtual Network
 
 1. In the [Zero Trust dashboard](http://one.dash.cloudflare.com), go to **Settings** > **WARP Client**.
 2. Under **Network locations**, find **Virtual networks** settings.
@@ -41,7 +41,7 @@ For more details, refer to the [Create tunnel](/cloudflare-one/connections/conne
 
 For more details, refer to the [Virtual Network](/cloudflare-one/connections/connect-networks/private-net/cloudflared/tunnel-virtual-networks/) documentation. For API-specific details, refer to the [virtual networks](/api/resources/zero_trust/subresources/networks/subresources/virtual_networks/) API documentation.
 
-The Tunnel and VLAN can be found under **Settings** > **WARP Client** in the Zero Trust dashboard.
+The Tunnel and Virtual Network can be found under **Settings** > **WARP Client** in the Zero Trust dashboard.
 
 ## 2. Create Load Balancer Pools
 
