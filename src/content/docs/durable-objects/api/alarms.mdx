@@ -48,7 +48,7 @@ Alarms can be used to build distributed primitives, like queues or batching of w
 :::caution[Calling `setAlarm` inside the constructor]
 If you wish to call `setAlarm` inside the constructor of a Durable Object, ensure that you are first checking whether an alarm has already been set.
 
-This is due to the fact that, if the Durable Object is inactive, the constructor is invoked before the [`alarm` handler](/durable-objects/api/alarms/#alarm). Therefore, if the constructor calls `setAlarm`, it could interfere with the next alarm which has already been set.
+This is due to the fact that, if the Durable Object wakes up after being inactive, the constructor is invoked before the [`alarm` handler](/durable-objects/api/alarms/#alarm). Therefore, if the constructor calls `setAlarm`, it could interfere with the next alarm which has already been set.
 :::
 
 ### `deleteAlarm`
