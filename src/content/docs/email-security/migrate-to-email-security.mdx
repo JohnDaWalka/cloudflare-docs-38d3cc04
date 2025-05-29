@@ -5,11 +5,11 @@ sidebar:
   order: 9
 ---
 
-This page aims at showing you how to perform Area 1 actions in [Zero Trust Email Security](/cloudflare-one/email-security/), and new terminology introduced in Email Security. 
+This page aims at showing you how to perform Area 1 actions in [Zero Trust Email Security](/cloudflare-one/email-security/), and new terminology introduced in Email Security.
 
 ## Invite users
 
-In Area 1, you invite users by logging in to the Area 1 portal and inviting members. Refer to [Add user](/email-security/account-setup/manage-account-members/#add-user) for detailed instructions.  
+In Area 1, you invite users by logging in to the Area 1 portal and inviting members. Refer to [Add user](/email-security/account-setup/manage-account-members/#add-user) for detailed instructions.
 
 To invite users in Email Security:
 
@@ -20,27 +20,27 @@ To invite users in Email Security:
 Once you have added new account members, you will have to assign each member a role. Refer to [Email Security roles](/cloudflare-one/roles-permissions/#email-security-roles) for the list of Email Security roles.
 
 | Area 1              | Email Security                                                     | Description                                                  |
-| ------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------ |
+|---------------------|--------------------------------------------------------------------|--------------------------------------------------------------|
 | Super Admin         | Email Security Analyst + Email Security Config Admin = Super Admin | Has full access to all products on Zero Trust Email Security |
-| Configuration Admin | Email Security Configuration Admin                                 | Admin, cannot take actions on emails or see emails          |
-| SOC Analyst         | Email Security Analyst                                             | Admin, can take actions on emails and see emails            |
-| Viewer              | Email Security Reporting                                           | Can see metrics                                             |
+| Configuration Admin | Email Security Configuration Admin                                 | Admin, cannot take actions on emails or see emails           |
+| SOC Analyst         | Email Security Analyst                                             | Admin, can take actions on emails and see emails             |
+| Viewer              | Email Security Reporting                                           | Can see metrics                                              |
 
 ## Create webhooks
 
 In Area 1, you can [create alert webhooks](/email-security/email-configuration/domains-and-routing/alert-webhooks/#create-an-alert-webhook).
 
-In Email Security, webhooks are instead referred to as logs. You can enable [detection logs](/cloudflare-one/insights/logs/enable-logs/#enable-detection-logs) and/or [user action logs](/cloudflare-one/insights/logs/enable-logs/#enable-user-action-logs).
+In Email Security, webhooks are instead referred to as logs. You can enable [detection logs](/cloudflare-one/insights/logs/enable-logs/#enable-detection-logs) and/or [user action logs](/cloudflare-one/insights/logs/enable-logs/#enable-user-action-logs). Additionally, you can enable [Outbound Data Loss Prevention](/cloudflare-one/email-security/outbound-dlp/) to protect sensitive information in outbound emails.
 
 ## Set up system alerts
 
-In Area 1 you can view [statistics](/email-security/reporting/statistics-overview/) of your account in the Home section.
+In Area 1, you can view [statistics](/email-security/reporting/statistics-overview/) of your account in the Home section.
 
 In Email Security, you can:
 
 - Go to [Cloudflare System Status](https://www.cloudflarestatus.com/) to view system status for the Cloudflare service.
 - Go to [Cloudflare Status API](https://www.cloudflarestatus.com/api) to view status information for the API documentation and functionality.
--  Configure [Cloudflare Notifications](/notifications/get-started/).
+- Configure [Cloudflare Notifications](/notifications/get-started/).
 
 ## Contact support
 
@@ -52,24 +52,25 @@ In Area 1, you can reach out to support via the following email addresses:
 In Email Security, you can:
 
 - Go to the [Cloudflare Help Center](https://www.support.cloudflare.com/s/?language=en_US)
-- [Add participants to open support tickets](/support/contacting-cloudflare-support/#add-participants-to-open-support-tickets)
-- [Raise a ticket](/support/contacting-cloudflare-support/#getting-help-with-an-issue) and enter the correct answers to the following questions:
+- [Contact Cloudflare Support](/support/contacting-cloudflare-support/)
+- [Raise a ticket](/support/contacting-cloudflare-support/#getting-help-with-an-issue) and enter the correct answer to the following questions:
   - What type of question do you have? **Technical - Other Products**
   - In what area can we help you? **Email Security**
- 
+- Email phishguard@area1security.com (for PhishGuard customers only).
+
 ## Search emails
 
-In Area 1, you can perform two types of search: [Fielded Search](/email-security/reporting/search/#fielded-search) and [Freeform Search](/email-security/reporting/search/#freeform-search). 
+In Area 1, you can perform two types of search: [Fielded Search](/email-security/reporting/search/#fielded-search) and [Freeform Search](/email-security/reporting/search/#freeform-search).
 
 In Email Security, the ability to search emails has been expanded. You can use three different [screen criteria](/cloudflare-one/email-security/email-monitoring/search-email/#screen-criteria) to search emails:
 
-- [Popular screen](/cloudflare-one/email-security/email-monitoring/search-email/#popular-screen)
-- [Regular screen](/cloudflare-one/email-security/email-monitoring/search-email/#regular-screen)
 - [Advanced screen](/cloudflare-one/email-security/email-monitoring/search-email/#advanced-screen)
+- [Regular screen](/cloudflare-one/email-security/email-monitoring/search-email/#regular-screen)
+- [Popular screen](/cloudflare-one/email-security/email-monitoring/search-email/#popular-screen)
 
 ## Check metrics
 
-In Area 1, you can check your metrics in your Home section. Additionally, Area 1 allows you to set up message retraction to move messages to specific folders. This is known as **retraction**.
+In Area 1, you can check metrics in your Home section. Refer to [Statistics overview]((/email-security/reporting/statistics-overview/)) for more information. Additionally, Area 1 allows you to set up message retraction to move messages to specific folders. This is known as **retraction**. Refer to [Retract settings](/email-security/email-configuration/retract-settings/) to learn more.
 
 In Email Security, you can check your metrics in the [Monitoring](/cloudflare-one/email-security/email-monitoring/) section in the dashboard.
 
@@ -79,30 +80,29 @@ Moving messages to a specific folder is known as [auto-moves](/cloudflare-one/em
 
 This table displays the difference in terminology used when creating policies:
 
-| Area 1           | Email Security        |
-|------------------|-----------------------|
-| [Allowed patterns](/email-security/email-configuration/lists/allowed-patterns/) | [Allow policies](/cloudflare-one/email-security/detection-settings/allow-policies/)       |
-| [Block list](/email-security/email-configuration/lists/block-list/)      | [Blocked senders](/cloudflare-one/email-security/detection-settings/blocked-senders/)       |
-| [Trusted domains](/email-security/email-configuration/lists/trusted-domains/)  | [Trusted domains](/cloudflare-one/email-security/detection-settings/trusted-domains/)       |
-| [Text add-ons](/email-security/email-configuration/email-policies/text-addons/)     | [Text add-ons](/cloudflare-one/email-security/detection-settings/configure-text-add-ons/)          |
-| [Link actions](/email-security/email-configuration/email-policies/link-actions/)     | [Link actions](/cloudflare-one/email-security/detection-settings/configure-link-actions/)          |
+| Area 1                                                                                        | Email Security                                                                                    |
+|-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| [Allowed patterns](/email-security/email-configuration/lists/allowed-patterns/)               | [Allow policies](/cloudflare-one/email-security/detection-settings/allow-policies/)               |
+| [Block lists](/email-security/email-configuration/lists/block-list/)                          | [Blocked senders](/cloudflare-one/email-security/detection-settings/blocked-senders/)             |
+| [Trusted domains](/email-security/email-configuration/lists/trusted-domains/)                 | [Trusted domains](/cloudflare-one/email-security/detection-settings/trusted-domains/)             |
+| [Text add-ons](/email-security/email-configuration/email-policies/text-addons/)               | [Text add-ons](/cloudflare-one/email-security/detection-settings/configure-text-add-ons/)         |
+| [Link actions](/email-security/email-configuration/email-policies/link-actions/)              | [Link actions](/cloudflare-one/email-security/detection-settings/configure-link-actions/)         |
 | [Added detections](/email-security/email-configuration/enhanced-detections/added-detections/) | [Additional detections](/cloudflare-one/email-security/detection-settings/additional-detections/) |
 
 ## Reclassifications
 
 This table displays the difference in terminology used when finding emails whose disposition is incorrect:
 
-| Area 1                               | Email Security            |
-|--------------------------------------|---------------------------|
-| Report [false negative](/email-security/email-configuration/phish-submissions/#false-negatives)/[false positive](/email-security/email-configuration/phish-submissions/#false-positives) | [Reclassify messages](/cloudflare-one/email-security/email-monitoring/search-email/#reclassify-messages)       |
-| N/A                                  | Escalate user submissions |
-| Team submission addresses            | [Team submission addresses](/cloudflare-one/email-security/email-monitoring/search-email/#team-submissions)     |
-| User submission addressed            | [User submission addresses](/cloudflare-one/email-security/email-monitoring/search-email/#user-submissions)      |
+| Area 1 | Email Security |
+|--|--|
+| Report [false negative](/email-security/email-configuration/phish-submissions/#false-negatives)/[false positive](/email-security/email-configuration/phish-submissions/#false-positives) | [ Reclassify messages ](/cloudflare-one/email-security/email-monitoring/search-email/#reclassify-messages) |
+| N/A | Escalate user submissions |
+| [Team submission](/email-security/email-configuration/phish-submissions/#how-to-submit-phish) | [Team submissions](/cloudflare-one/email-security/email-monitoring/search-email/#team-submissions) |
+| [User submission](/email-security/email-configuration/phish-submissions/#how-to-submit-phish) | [User submissions](/cloudflare-one/email-security/email-monitoring/search-email/#user-submissions) |
 
 ## Business Email Compromise
 
 In Area 1, you can set up a [Business email compromise (BEC)](/email-security/email-configuration/enhanced-detections/business-email-compromise/) list to protect against attackers who try to impersonation executives.
-
 
 In Email Security, this feature is known as [impersonation registry](/cloudflare-one/email-security/detection-settings/impersonation-registry/).
 
