@@ -29,7 +29,7 @@ The **Update User Attributes** option is not supported.
 
 1. In your integration page, go to **Provisioning** > **Configure API Integration**.
 2. Enable **Enable API Integration**.
-3. In SCIM 2.0 Base URL, enter: `https://api.cloudflare.com/client/v4/accounts/<accountID>/scim/v2`, substituting `accountID` for your [Cloudflare Account ID](/fundamentals/setup/account/account-security/scim-setup/#get-your-account-id).
+3. In SCIM 2.0 Base URL, enter: `https://api.cloudflare.com/client/v4/accounts/<accountID>/scim/v2`, substituting `accountID` for your [Cloudflare Account ID](/fundamentals/account/account-security/scim-setup/#get-your-account-id).
 4. In the **OAuth Bearer Token** field, enter your API token value.
 5. Deselect **Import Groups**.
 
@@ -43,7 +43,7 @@ The **Update User Attributes** option is not supported.
 5. In the Push Groups tab, add the Okta groups you want to synchronize with Cloudflare Dash. You can view these groups in the dash under Manage Account > Manage members > Members > User Groups.
 
 :::note
-You must have opted into the Cloudflare User Groups Public Beta to synchronize groups from Okta to Cloudflare. Refer to the [User Groups](/fundamentals/setup/manage-members/user-groups/) documentation for more information.
+You must have opted into the Cloudflare User Groups Public Beta to synchronize groups from Okta to Cloudflare. Refer to the [User Groups](/fundamentals/manage-members/user-groups/) documentation for more information.
 :::
 
 To verify the integration, select **View Logs** in the Okta SCIM application, and check the Cloudflare Dash Audit Logs by navigating to **Manage Account** > **Audit Log**. 
